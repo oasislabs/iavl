@@ -263,6 +263,38 @@ func (tree *MutableTree) LoadVersion(targetVersion int64) (int64, error) {
 	return latestVersion, nil
 }
 
+// LoadVersionFast loads the specified version of the tree from disk, without
+// iterating over every single root in the database.
+//
+// Note: Unlike LoadVersion, a version of 0 will return an error instead of
+// the latest version.
+func (tree *MutableTree) LoadVersionFast(targetVersion int64) error {
+	// A version of `0` has the semantic meaning of "latest" which would
+	// require iterating over all of the roots.
+	if targetVersion == 0 {
+		return fmt.Errorf("loading latest version is unsupported")
+	}
+
+	// Iff the target version happens to be the last saved version, a simple
+	// roll back will suffice.
+	if targetVersion == tree.lastSaved.version {
+		tree.Rollback()
+		return nil
+	}
+
+	// Fetch the target version from the backing store.
+	t, err := tree.GetImmutable(targetVersion)
+	if err != nil {
+		return err
+	}
+
+	tree.orphans = map[string]int64{}
+	tree.ImmutableTree = t
+	tree.lastSaved = t.clone()
+
+	return nil
+}
+
 // GetImmutable loads an ImmutableTree at a given version for querying
 func (tree *MutableTree) GetImmutable(version int64) (*ImmutableTree, error) {
 	rootHash := tree.ndb.getRoot(version)
