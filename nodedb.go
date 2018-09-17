@@ -329,6 +329,10 @@ func (ndb *nodeDB) Commit() {
 	ndb.batch = ndb.db.NewBatch()
 }
 
+func (ndb *nodeDB) hasRoot(version int64) bool {
+	return ndb.db.Has(ndb.rootKey(version))
+}
+
 func (ndb *nodeDB) getRoot(version int64) []byte {
 	return ndb.db.Get(ndb.rootKey(version))
 }
