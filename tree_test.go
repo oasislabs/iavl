@@ -52,6 +52,8 @@ func TestVersionedRandomTree(t *testing.T) {
 	versions := 50
 	keysPerVersion := 30
 
+	require.EqualValues(-1, tree.EldestVersion(), "eldest version when empty tree")
+
 	// Create a tree of size 1000 with 100 versions.
 	for i := 1; i <= versions; i++ {
 		for j := 0; j < keysPerVersion; j++ {
@@ -70,6 +72,7 @@ func TestVersionedRandomTree(t *testing.T) {
 
 	for i := 1; i < versions; i++ {
 		tree.DeleteVersion(int64(i))
+		require.EqualValues(i+1, tree.EldestVersion(), "wrong eldest version")
 	}
 
 	tr, err := tree.GetImmutable(int64(versions))

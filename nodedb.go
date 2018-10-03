@@ -248,6 +248,25 @@ func (ndb *nodeDB) resetLatestVersion(version int64) {
 	ndb.latestVersion = version
 }
 
+func (ndb *nodeDB) getEldestVersion() int64 {
+	// This is used infrequently enough that it likely doesn't need
+	// to be cached.
+	itr := ndb.db.Iterator(
+		rootKeyFormat.Key(0),
+		rootKeyFormat.Key(1<<63-1),
+	)
+	defer itr.Close()
+
+	if itr.Valid() {
+		var eversion int64
+		k := itr.Key()
+		rootKeyFormat.Scan(k, &eversion)
+		return eversion
+	}
+
+	return -1
+}
+
 func (ndb *nodeDB) getPreviousVersion(version int64) int64 {
 	itr := ndb.db.ReverseIterator(
 		rootKeyFormat.Key(1),
