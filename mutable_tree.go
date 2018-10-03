@@ -43,6 +43,11 @@ func (tree *MutableTree) VersionExists(version int64) bool {
 	return tree.ndb.hasRoot(version)
 }
 
+// EldestVersion returns the eldest version, or `-1` iff no versions exist.
+func (tree *MutableTree) EldestVersion() int64 {
+	return tree.ndb.getEldestVersion()
+}
+
 // Hash returns the hash of the latest saved version of the tree, as returned
 // by SaveVersion. If no versions have been saved, Hash returns nil.
 func (tree *MutableTree) Hash() []byte {
