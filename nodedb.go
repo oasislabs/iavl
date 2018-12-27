@@ -232,9 +232,12 @@ func (ndb *nodeDB) rootKey(version int64) []byte {
 }
 
 func (ndb *nodeDB) getLatestVersion() int64 {
-	if ndb.latestVersion == 0 {
-		ndb.latestVersion = ndb.getPreviousVersion(1<<63 - 1)
-	}
+	// Every single case where this is called, the overhead of hitting up
+	// the database will be masked by having to do lots of other DB
+	// operations.
+
+	ndb.latestVersion = ndb.getPreviousVersion(1<<63 - 1)
+
 	return ndb.latestVersion
 }
 
