@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/db"
+	"github.com/tendermint/tm-db"
 
 	mathrand "math/rand"
 

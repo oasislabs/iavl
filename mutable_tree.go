@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	cmn "github.com/tendermint/tendermint/libs/common"
-	dbm "github.com/tendermint/tendermint/libs/db"
+	dbm "github.com/tendermint/tm-db"
 )
 
 // ErrVersionDoesNotExist is returned if a requested version does not exist.
@@ -275,7 +275,7 @@ func (tree *MutableTree) LoadVersionForOverwriting(targetVersion int64) (int64, 
 	if err != nil {
 		return latestVersion, err
 	}
-	tree.deleteVersionsFrom(targetVersion+1)
+	tree.deleteVersionsFrom(targetVersion + 1)
 	return targetVersion, nil
 }
 
