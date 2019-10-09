@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	cmn "github.com/tendermint/tendermint/libs/common"
-	"github.com/tendermint/tendermint/libs/db"
+	"github.com/tendermint/tm-db"
 )
 
 // This file implement fuzz testing by generating programs and then running

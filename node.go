@@ -109,8 +109,8 @@ func (node *Node) String() string {
 		hashstr = fmt.Sprintf("%X", node.hash)
 	}
 	return fmt.Sprintf("Node{%s:%s@%d %X;%X}#%s",
-		cmn.ColoredBytes(node.key, cmn.Green, cmn.Blue),
-		cmn.ColoredBytes(node.value, cmn.Cyan, cmn.Blue),
+		node.key,
+		node.value,
 		node.version,
 		node.leftHash, node.rightHash,
 		hashstr)
@@ -292,6 +292,20 @@ func (node *Node) writeHashBytesRecursively(w io.Writer) (hashCount int64, err c
 	err = node.writeHashBytes(w)
 
 	return
+}
+
+func (node *Node) aminoSize() int {
+	n := 1 +
+		amino.VarintSize(node.size) +
+		amino.VarintSize(node.version) +
+		amino.ByteSliceSize(node.key)
+	if node.isLeaf() {
+		n += amino.ByteSliceSize(node.value)
+	} else {
+		n += amino.ByteSliceSize(node.leftHash) +
+			amino.ByteSliceSize(node.rightHash)
+	}
+	return n
 }
 
 // Writes the node as a serialized byte slice to the supplied io.Writer.
