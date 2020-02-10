@@ -18,5 +18,6 @@ require (
 	github.com/syndtr/goleveldb v0.0.0-20181105012736-f9080354173f
 	github.com/tendermint/go-amino v0.14.1
 	github.com/tendermint/tendermint v0.27.0-dev1
+	github.com/tendermint/tm-db v0.2.0
 	golang.org/x/crypto v0.0.0-20181126093934-9eb0be3963ea
 )
